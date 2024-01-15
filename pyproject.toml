@@ -1,0 +1,47 @@
+[tool.poetry]
+name = "evens"
+version = "3.11"
+description = ""
+authors = ["HenriqueSilvaXavier <134643923+HenriqueSilvaXavier@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.109.0"
+uvicorn = "^0.25.0"
+
+
+[tool.poetry.group.dev.dependencies]
+taskipy = "^1.12.2"
+pytest = "^7.4.4"
+pytest-cov = "^4.1.0"
+ruff = "^0.1.13"
+isort = "^5.13.2"
+httpx = "^0.26.0"
+
+[tool.ruff]
+line-length = 79
+exclude = ['.venv', 'migrations']
+
+[tool.isort]
+profile = "black"
+line_length = 79
+extend_skip = ['migrations']
+
+[tool.pytest.ini_options]
+pythonpath = "."
+
+[tool.blue]
+extend-exclude = '(migrations/)'
+
+[tool.taskipy.tasks]
+lint = 'ruff . && blue --check . --diff'
+format = 'blue .  && isort .'
+run = 'uvicorn evens.app:app --reload'
+pre_test = 'task lint'
+test = 'pytest -s -x --cov=evens -vv'
+post_test = 'coverage html'
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
